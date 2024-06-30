@@ -8,24 +8,19 @@ export PYTHONPATH=${PYTHONPATH}:.
 echo "PYTHONPATH: ${PYTHONPATH}"
 
 JOB_NAME='videomamba_tiny_res224'
-OUTPUT_DIR="$(dirname $0)"
+OUTPUT_DIR="/home/ubuntu/VideoMamba/videomamba/image_sm/outputs"
 LOG_DIR="./logs/${JOB_NAME}"
 PARTITION='video5'
 NNODE=1
 NUM_GPUS=8
 NUM_CPU=128
 
-srun --mpi=pmi2 \
-    -p ${PARTITION} \
-    -n${NNODE} \
-    --gres=gpu:${NUM_GPUS} \
-    --ntasks-per-node=1 \
-    --cpus-per-task=${NUM_CPU} \
-    python -m torch.distributed.launch --nproc_per_node=${NUM_GPUS} --use_env main.py \
-        --root_dir_train your_imagenet_path/train/ \
-        --meta_file_train your_imagenet_path/meta/train.txt \
-        --root_dir_val your_imagenet_path/val/ \
-        --meta_file_val your_imagenet_path/meta/val.txt \
+#torchrun --nnodes=1 --nproc-per-node=1 \
+torchrun --nnodes=1 --nproc_per_node=8  main.py \
+        --root_dir_train /home/ubuntu/datasets/Imagenet/data/imagenet/train/ \
+        --meta_file_train /home/ubuntu/datasets/Imagenet/data/imagenet/meta/train.txt \
+        --root_dir_val /home/ubuntu/datasets/Imagenet/data/imagenet/val/ \
+        --meta_file_val /home/ubuntu/datasets/Imagenet/data/imagenet/meta/val.txt \
         --model videomamba_tiny \
         --batch-size 512 \
         --num_workers 16 \

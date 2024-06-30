@@ -2,12 +2,15 @@ import os
 import json
 from tensorboardX import SummaryWriter
 
-exp_path_list = ['exp']
+#exp_path_list = ['exp']
+exp_path_list = ['outputs']
 log_keys = ['train_lr', 'train_loss', 'test_loss', 'test_acc1', 'test_acc5']
 
 for path in exp_path_list:
     for exp in os.listdir(path):
-        log_path = os.path.join('.', path, exp, 'ckpt', 'log.txt')
+        print('exp', exp)
+        log_path = os.path.join('.', path, exp, 'log.txt')
+        print('log_path', log_path)
         if os.path.exists(log_path):
             tensorboard_path = os.path.join('.', path, exp, 'events')
             if os.path.exists(tensorboard_path):
